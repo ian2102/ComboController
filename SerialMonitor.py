@@ -47,12 +47,12 @@ def main():
 
         try:
             while True: # todo make backspace work "\b"
-                data = ser.readline().decode('utf-8')
+                data = ser.readline().decode('utf-8').strip()
                 match = re.match(pattern, data)
                 if match:
                     x = int(match.group(1))
                     y = int(match.group(2))
-                    print(f"x = {x}, y = {y}")
+                    # print(f"x = {x}, y = {y}")
                     pyautogui.moveRel(x, y, duration = 0.0)
                 else:
                     sys.stdout.write(data)

@@ -3,6 +3,8 @@ const int buttonPin = 15;
 const int shiftButtonPin = 16;
 const int potPin = A0;
 
+const int modeLed = 9;
+
 const int range = 40;
 
 int potValue = 0;
@@ -31,21 +33,14 @@ void setup() {
 }
 
 void loop() {
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(leds[i], LOW);
-  }
-
   switchMode();
-
 
   if (currentMode == KEYBOARD) {
     getKeyboardInput();
+    digitalWrite(modeLed, KEYBOARD);
   } else {
     getMouseInput();
-  }
-
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(leds[i], HIGH);
+    digitalWrite(modeLed, MOUSE);
   }
 }
 
@@ -97,11 +92,10 @@ void getKeyboardInput() {
       char inputChar = getChar(potValue);
       inputBuffer += inputChar;
     }
-    Serial.print(inputBuffer);
-    Serial.print(inputBuffer);
+    Serial.println(inputBuffer);
     delay(10);
     if (digitalRead(buttonPin) == LOW) {
-      Serial.print("_");
+      Serial.println("_");
     }
   }
 }
