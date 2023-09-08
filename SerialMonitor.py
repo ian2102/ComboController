@@ -1,7 +1,8 @@
-import os
 import serial
-import sys
 from serial.tools import list_ports
+import pyautogui
+import re
+import sys
 
 # Function to list available serial ports
 def list_available_ports():
@@ -41,11 +42,21 @@ def main():
         # Hide the cursor
         sys.stdout.write("\033[?25l")
         sys.stdout.flush()
+
+        pattern = r"Mouse\.move\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)"
+
         try:
             while True: # todo make backspace work "\b"
                 data = ser.readline().decode('utf-8')
-                sys.stdout.write(data)
-                sys.stdout.flush()
+                match = re.match(pattern, data)
+                if match:
+                    x = int(match.group(1))
+                    y = int(match.group(2))
+                    print(f"x = {x}, y = {y}")
+                    pyautogui.moveRel(x, y, duration = 0.0)
+                else:
+                    sys.stdout.write(data)
+                    sys.stdout.flush()
 
         except KeyboardInterrupt:
             print("Serial monitoring stopped.")

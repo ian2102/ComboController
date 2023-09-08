@@ -3,8 +3,9 @@ const int buttonPin = 15;
 const int shiftButtonPin = 16;
 const int potPin = A0;
 
+const int range = 40;
+
 int potValue = 0;
-bool buttonPressed = false;
 
 String inputBuffer = "";  // Buffer to store input text
 
@@ -61,17 +62,19 @@ void getMouseInput() {
 
     double radians = angle * (M_PI / 180.0);
 
-    // Calculate X and Y components
     int xDistance = (int)(range * cos(radians));
     int yDistance = (int)(range * sin(radians));
 
-
+    // arduino nano doesnt support Mouse.move
+    // print the change for now
+    // Digispark attiny85 does
     Serial.print("Mouse.move(");
     Serial.print(xDistance);
     Serial.print(", ");
     Serial.print(yDistance);
     Serial.println(")");
     Serial.println("");
+    delay(100);
   }
 }
 
@@ -83,7 +86,7 @@ void getKeyboardInput() {
 
     // Send backspace characters to remove previous input
     for (int i = 0; i < bufferLength; i++) {
-      //Serial.print('\b');
+      Serial.print('\b');
     }
 
     inputBuffer = "";
@@ -127,7 +130,7 @@ char getChar(int input) {
   switch (input) {
     case 0 ... 25:
       return char('a' + input);  // Convert value 0-25 to 'a'-'z'
-    /*
+    /* todo implement some more characters
       case 26:
         return ' ';  // Space character
       case 27:
