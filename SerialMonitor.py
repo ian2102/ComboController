@@ -38,9 +38,12 @@ def main():
         # Print a message indicating that the program is listening on the selected port
         print(f"Listening on {selected_port}")
         
+        # Hide the cursor
+        sys.stdout.write("\033[?25l")
+        sys.stdout.flush()
         try:
             while True: # todo make backspace work "\b"
-                data = ser.readline().decode('utf-8').strip()
+                data = ser.readline().decode('utf-8')
                 sys.stdout.write(data)
                 sys.stdout.flush()
 
@@ -51,12 +54,19 @@ def main():
             # Close the serial port and perform cleanup
             ser.close()
 
-    #except ValueError:
-        #print("Error: Please enter a valid number.")
+            # Show the cursor again
+            sys.stdout.write("\033[?25h")
+            sys.stdout.flush()
+
+    except ValueError:
+        print("Error: Please enter a valid number.")
     except IndexError:
         print("Error: Invalid port selection. Please select a valid port.")
     except Exception as e:
         print(f"An unexpected error occurred: {str(e)}")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Serial monitoring stopped.")
